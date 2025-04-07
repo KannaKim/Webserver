@@ -1,3 +1,4 @@
 toy
 .vscode
 *.o
+*.exe
