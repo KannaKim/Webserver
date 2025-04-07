@@ -5,9 +5,15 @@
 #include <ws2tcpip.h>
 #include <iostream>
 #include "Server.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <filesystem>
 
 using namespace std;
 
+namespace fs = std::filesystem;
+
+struct stat info;
 const int PORT = 8080;
 const int BUFFER_SIZE = 1024;
 
@@ -71,6 +77,49 @@ void Server::start(){
         handleClient(clientSocket);
     }
 }
+string Server::getContentPath(string filePath){
+    string contentPath="";
+    cout << "File path: " << filePath << endl; 
+    if(filePath.starts_with("/")) {
+        filePath.erase(0,1);
+    }
+    if(filePath.ends_with("/")) {
+        filePath.erase(filePath.length()-1,1);
+    }
+    fs::file_status stat = fs::status(filePath);
+    if(filePath.empty()){
+        contentPath = "./index.html";
+    }
+    else if(fs::is_directory(stat)){
+        contentPath = filePath + "/index.html";
+    } 
+    else{
+        contentPath = filePath;
+    }
+    cout << "contentPath:"<< contentPath << endl;
+    return contentPath;
+}
+string Server::getResponse(string filePath, string content){
+    string response;
+    if(filePath.ends_with(".jpg")) {
+        response = "HTTP/1.1 200 OK\r\n";
+        response += "Content-Type: image/jpg\r\n";
+        response += "\r\n";
+        response += content;
+    }
+    else if (!content.empty()) {
+        response = "HTTP/1.1 200 OK\r\n";
+        response += "Content-Type: text/html\r\n";
+        response += "\r\n";
+        response += content;
+    } else {
+        response = "HTTP/1.1 404 Not Found\r\n";
+        response += "Content-Type: text/html\r\n";
+        response += "\r\n";
+        response += "<h1>404 Not Found</h1>";
+    }
+    return response;
+}
 void Server::handleClient(SOCKET clientSocket){
     char buffer[BUFFER_SIZE] = {0};
     int bytesReceived = recv(clientSocket, buffer, BUFFER_SIZE, 0);
@@ -78,36 +127,18 @@ void Server::handleClient(SOCKET clientSocket){
     if (bytesReceived > 0) {
         std::string request(buffer);
         std::string filePath = "index.html"; // Default file
-        
+        string contentPath = "";
         // Parse GET request
         if (request.find("GET") != std::string::npos) {
             size_t start = request.find("GET") + 4;
             size_t end = request.find("HTTP/1.1") - 1;
             if (start < end && end != std::string::npos) {
                 filePath = request.substr(start, end - start);
-                cout << "File path: " << filePath << endl; // Debugging line
-                if (filePath == "/") {
-                    filePath = "index.html";
-                } else {
-                    filePath = filePath.substr(1); // Remove leading slash
-                }
+                contentPath = getContentPath(filePath);
             }
         }
-        
-        std::string content = readFile(filePath);
-        std::string response;
-        
-        if (!content.empty()) {
-            response = "HTTP/1.1 200 OK\r\n";
-            response += "Content-Type: text/html\r\n";
-            response += "\r\n";
-            response += content;
-        } else {
-            response = "HTTP/1.1 404 Not Found\r\n";
-            response += "Content-Type: text/html\r\n";
-            response += "\r\n";
-            response += "<h1>404 Not Found</h1>";
-        }
+        std::string content = readFile(contentPath);
+        std::string response = getResponse(contentPath,content);
         
         send(clientSocket, response.c_str(), response.length(), 0);
     }

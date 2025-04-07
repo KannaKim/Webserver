@@ -1,11 +1,11 @@
 #pragma once
 #include <winsock2.h>
 #include <string>
+using namespace std;
 class Server{
     public:
         static Server& getInstance();
         void start();
-        void handleClient(SOCKET clientSocket);
 
     private:
         Server();
@@ -14,5 +14,8 @@ class Server{
         WSADATA wsaData;
         SOCKET serverSocket;
         sockaddr_in serverAddr;
-        std::string readFile(const std::string& filename);
+        string readFile(const string& filename);
+        void handleClient(SOCKET clientSocket);
+        string getContentPath(string filePath);
+        string getResponse(string filePath, string content);
 };

@@ -1,10 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Test Web Server</title>
+    <title>My C++ Web Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .code {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 20px 0;
+        }
+        .feature-list {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Web Server Test Page</h1>
-    <p>If you can see this, your C++ web server is working correctly!</p>
+    <div class="container">
+        <h1>Welcome to My C++ Web Server</h1>
+        <p>This web server was built from scratch using C++ and implements the following features:</p>
+        
+        <div class="feature-list">
+            <ul>
+                <li>TCP socket communication</li>
+                <li>HTTP/1.1 protocol support</li>
+                <li>GET request handling</li>
+                <li>HTML file serving</li>
+                <li>jpg file serving</li>
+                <li>404 error handling</li>
+            </ul>
+        </div>
+
+        <h2>How It Works</h2>
+        <p>The server follows these steps:</p>
+        <ol>
+            <li>Initializes Winsock2 for network communication</li>
+            <li>Creates a TCP socket and binds it to port 8080</li>
+            <li>Listens for incoming connections</li>
+            <li>Accepts client connections</li>
+            <li>Processes HTTP requests</li>
+            <li>Serves requested files</li>
+            <li>Closes connections properly</li>
+        </ol>
+        <h4>Content</h4>
+        <ul>
+            <li><a href="/">/</a></li>
+            <li><a href="/duck">/duck</a></li>
+            <li><a href="/plant/my_plant.jpg">/plant/my_plant.jpg</a></li>
+            <li><a href="/plant/word.txt">/plant/word.txt</a></li>
+        </ul>
+    </div>
 </body>
 </html> 
