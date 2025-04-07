@@ -51,7 +51,7 @@ The server is built using:
 
 1. Compile the server:
 ```bash
-g++ -Wall -Wextra -std=c++20 webserver.cpp -o webserver.exe -lws2_32
+make main
 ```
 
 2. Run the server:
@@ -59,7 +59,7 @@ g++ -Wall -Wextra -std=c++20 webserver.cpp -o webserver.exe -lws2_32
 .\webserver.exe
 ```
 
-3. Access the server:
+3. Access the server using your browser (default port is 8080):
 ```
 http://localhost:8080
 ```
