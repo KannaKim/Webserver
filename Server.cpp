@@ -6,6 +6,8 @@
 #include <iostream>
 #include "Server.h"
 
+using namespace std;
+
 const int PORT = 8080;
 const int BUFFER_SIZE = 1024;
 
@@ -83,6 +85,7 @@ void Server::handleClient(SOCKET clientSocket){
             size_t end = request.find("HTTP/1.1") - 1;
             if (start < end && end != std::string::npos) {
                 filePath = request.substr(start, end - start);
+                cout << "File path: " << filePath << endl; // Debugging line
                 if (filePath == "/") {
                     filePath = "index.html";
                 } else {
